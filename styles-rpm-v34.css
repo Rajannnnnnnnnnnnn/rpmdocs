@@ -367,3 +367,19 @@ label{color:#c3cbd7}input[type=text],input[type=date],input[type=file],input[typ
  .preview-column{position:static}
  .control-column .panel-card{max-width:none}
 }
+
+/* v3.4.3: browser zoom on a mouse-equipped computer is not a phone layout. */
+@media screen and (max-width:850px) and (hover:hover) and (pointer:fine){
+ .preview-column{overflow-x:auto;min-width:0;max-width:100%}
+ .preview-layout{display:grid;grid-template-columns:minmax(240px,1fr) 240px;gap:14px;min-width:494px;align-items:start}
+ .rp-sidebar{max-height:max(360px,calc(100dvh - 132px));overflow:auto;scroll-margin-top:16px}
+ .document-stage{height:calc(100dvh - 176px);min-height:360px;max-height:1200px}
+ .rp-sidebar .rp-copy-next{top:0}
+}
+@media screen and (max-width:1100px) and (hover:hover) and (pointer:fine){
+ .content-grid{grid-template-columns:280px minmax(0,1fr)}
+ .preview-column{overflow-x:auto;min-width:0;max-width:100%}
+ .preview-layout{grid-template-columns:minmax(220px,1fr) 230px;gap:14px;min-width:464px}
+ .rp-sidebar{max-height:max(360px,calc(100dvh - 132px));overflow:auto}
+ .document-stage{height:calc(100dvh - 176px);min-height:360px;max-height:1200px}
+}
