@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="rpm-version" content="3.4.1-repaired-package" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="assets/avatar.png">
+  <title>RPM Docs — редактор государственных документов</title>
+  <meta name="description" content="Конструктор ордеров, указов, судебных документов и договоров штата RPM." />
+  <link rel="stylesheet" href="vendor/fonts.css">
+  <link rel="stylesheet" href="styles-rpm-v34.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-avatar" src="assets/avatar.png" alt="Сова — символ RPM Docs" width="48" height="48">
+        <div><div class="brand-title">RPM Docs</div><div class="brand-subtitle">Документы штата</div></div>
+      </div>
+      <button class="primary-btn full" id="newDocumentBtn">+ Новый документ</button>
+      <nav class="side-nav">
+        <button class="nav-item active" data-panel="templatesPanel">Шаблоны</button>
+        <button class="nav-item" data-panel="quickPanel">Заполнение</button>
+        <button class="nav-item" data-panel="editorPanel">Редактор</button>
+        <button class="nav-item" data-panel="savedPanel">Мои документы</button>
+      </nav>
+      
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div><div class="eyebrow">RPM / ДОКУМЕНТЫ</div><h1 id="workspaceTitle">Новый документ</h1></div>
+        <div class="top-actions">
+          <div class="document-undo"><button class="ghost-btn" id="undoDocumentBtn" title="Отменить (Ctrl+Z)" aria-label="Отменить изменение" disabled>↶</button><button class="ghost-btn" id="redoDocumentBtn" title="Вернуть (Ctrl+Shift+Z)" aria-label="Вернуть изменение" disabled>↷</button></div>
+          <details class="document-file-menu" id="documentFileMenu"><summary>Файл</summary><div class="document-file-options"><button type="button" id="exportDocumentBtn">Скачать документ</button><label>Открыть документ<input id="importDocumentInput" type="file" accept=".rpmdoc,application/json,.json"></label></div></details>
+          <button class="ghost-btn" id="saveVersionBtn">Сохранить</button>
+          
+          <button class="ghost-btn" id="pngBtn">PNG</button>
+          <button class="ghost-btn" id="pngZipBtn">Архив PNG</button>
+          <button class="primary-btn" id="pdfBtn">PDF</button>
+        </div>
+      </header>
+
+      <div class="content-grid">
+        <section class="control-column">
+          <div id="templatesPanel" class="panel active-panel">
+            <div class="panel-card">
+              <div class="panel-heading"><h2>Выберите документ</h2></div>
+              <label class="template-search">Поиск шаблона<input id="templateSearch" type="search" placeholder="Название документа…"></label><div id="templateSearchEmpty" class="help hidden">Ничего не найдено</div><div class="template-group"><div class="template-group-title">Ордера</div><div class="template-grid" id="warrantTemplates"></div></div>
+              <div class="template-group"><div class="template-group-title">Правительство</div><div class="template-grid" id="governmentTemplates"></div></div>
+              <div class="template-group"><div class="template-group-title">Суд</div><div class="template-grid" id="courtTemplates"></div></div>
+              <div class="template-group"><div class="template-group-title">Больница</div><div class="template-grid" id="hospitalTemplates"></div></div>
+              <div class="template-group"><div class="template-group-title">Договоры</div><div class="template-grid" id="contractTemplates"></div></div>
+            </div>
+          </div>
+
+          <div id="quickPanel" class="panel">
+            <div class="panel-card">
+              <div class="panel-heading"><h2 id="quickTitle">Заполнение шаблона</h2></div>
+              <div id="quickFields" class="quick-fields"></div>
+              <div class="quick-actions">
+                
+                <button class="secondary-btn full" id="openEditorBtn"><span>Настроить документ</span><span aria-hidden="true">↗</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div id="editorPanel" class="panel">
+            <div class="panel-card">
+              <div class="panel-heading compact"><h2>Основные данные</h2></div>
+              <div class="field-grid two"><label>Организация<input id="orgInput" type="text"></label><label>Номер / код<input id="codeInput" type="text"></label></div>
+              <label>Название<input id="titleInput" type="text"></label>
+              <div class="field-grid"><label>Дата<input id="dateInput" type="date"></label></div>
+              <label>Стиль документа<select id="styleInput">
+                <option value="government">Government</option><option value="court">Судебный</option><option value="federal">FBI / Federal</option><option value="cpd">CPD</option><option value="medical">Медицинский</option><option value="hospital">Медицинский v2</option><option value="navy">ВМС</option><option value="classic">Классический</option>
+              </select></label>
+              <label>Герб / эмблема<input id="emblemInput" type="file" accept="image/*"><span class="help">По умолчанию — герб США.</span></label>
+              <button class="danger-link" id="removeEmblemBtn">Вернуть герб США</button>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-heading compact"><h2>Секции</h2></div>
+              <div id="sectionList" class="section-list"></div>
+              <div class="add-section-grid"><button data-add-section="heading">+ Заголовок</button><button data-add-section="text">+ Текст</button><button data-add-section="notice">+ Выделение</button><button data-add-section="divider">+ Линия</button></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-heading compact"><h2>Типографика и водяной знак</h2></div>
+              <label>Шрифт документа<select id="fontInput"><option value="georgia">Georgia</option><option value="forum">Forum</option><option value="ptserif">PT Serif</option><option value="inter">Inter</option></select></label>
+              <div class="watermark-settings">
+                <label class="check-row"><input id="watermarkEnabled" type="checkbox"> Включить водяной знак</label>
+                <label>Текст<input id="watermarkText" type="text" placeholder="CONFIDENTIAL / DRAFT / FBI"></label>
+                <div class="field-grid two"><label>Прозрачность<input id="watermarkOpacity" type="range" min="3" max="30" value="10"></label><label>Размер<input id="watermarkSize" type="range" min="40" max="150" value="88"></label></div>
+                <label>Угол<input id="watermarkAngle" type="range" min="-60" max="60" value="-28"></label>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-heading compact"><h2>Подписанты</h2></div>
+              <div id="signerList"></div><button class="secondary-btn full" id="addSignerBtn">+ Добавить подписанта</button>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-heading compact"><h2>Штамп учреждения</h2></div>
+              <label>Выберите штамп<select id="stampTypeInput"><option value="none">Без штампа</option><option value="government">Government</option><option value="cpd">CPD</option><option value="fbi">FBI</option><option value="hospital">Больница</option><option value="navy">ВМС</option><option value="custom">Свой штамп по ссылке</option></select></label>
+              
+              <div id="customStampEditor" class="custom-stamp-settings hidden" data-custom-stamp="editor"></div>
+              <label>Примечание внизу<textarea id="footerInput" rows="3"></textarea></label>
+            </div>
+          </div>
+
+
+          <div id="savedPanel" class="panel">
+            <div class="panel-card">
+              <div class="panel-heading"><h2>Мои документы</h2></div>
+              <div class="history-toolbar"><button class="secondary-btn" id="exportHistoryBtn">Экспорт архива</button><label class="import-label">Импорт архива<input id="importHistoryInput" type="file" accept="application/json,.json"></label></div>
+              <div id="savedList" class="saved-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-column">
+          <div class="preview-layout">
+            <div class="document-view">
+          <div class="preview-toolbar"><div class="preview-label">Документ</div><div class="page-indicator"><span id="pageCount">1 страница</span></div><div class="zoom-controls"><button id="zoomFitBtn" class="zoom-fit" title="Подогнать лист по ширине">По ширине</button><button id="zoomOutBtn" aria-label="Уменьшить масштаб">−</button><span id="zoomLabel">100%</span><button id="zoomInBtn" aria-label="Увеличить масштаб">+</button></div></div>
+          <div class="document-stage"><div id="pageViewport" class="page-viewport"><div id="pagesContainer" class="pages-container"></div></div></div>
+
+            </div>
+            <aside id="rpPanel" class="rp-sidebar" aria-label="РП-отыгровки">
+            <div class="panel-card">
+              <div class="panel-heading"><h2>РП-отыгровки</h2><p></p></div>
+              <details class="rp-options"><summary>Составитель и должность</summary><div class="rp-settings">
+                <label>РП-имя составителя<input id="rpActorInput" type="text" placeholder="Из подписанта документа"></label>
+                <label>Должность<input id="rpRoleInput" type="text" placeholder="Из подписанта документа"></label>
+              </div>
+              </details>
+              <div class="rp-tools"><button class="primary-btn" id="rpGenerateBtn">Сформировать</button><button class="secondary-btn" id="rpCopyAllBtn">Весь сценарий</button></div>
+              <div id="rpPlaceholderNote" class="rp-note hidden">В документе есть незаполненные поля. Они сохранены в сценарии — заполните их перед использованием.</div>
+              <div class="rp-copy-next"><div><strong id="rpProgress">0 команд</strong><span id="rpNextLabel">Можно копировать по одной</span></div><button class="primary-btn" id="rpCopyNextBtn">Копировать следующую</button></div>
+              <div id="rpCommands" class="rp-commands"></div>
+            </div>
+          </aside>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  
+  <div id="toast" class="toast"></div>
+  <script src="vendor/jszip.min.js"></script>
+  <script src="vendor/html2canvas.min.js"></script>
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="app-rpm-v34.js"></script>
+</body>
+</html>
