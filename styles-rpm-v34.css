@@ -340,3 +340,30 @@ label{color:#c3cbd7}input[type=text],input[type=date],input[type=file],input[typ
 .document-undo{display:flex;gap:3px}.document-undo button{font-size:20px!important;line-height:1;padding:7px 10px!important;min-width:34px}.document-undo button:disabled{opacity:.35;cursor:default}.document-file-menu{position:relative}.document-file-menu summary{list-style:none;cursor:pointer;padding:10px 13px;border:1px solid #3a424e;border-radius:8px;color:#dce3ed;background:#20252e;font-size:12px;white-space:nowrap}.document-file-menu summary::-webkit-details-marker{display:none}.document-file-menu[open] summary{border-color:#9cb9df}.document-file-options{position:absolute;top:calc(100% + 9px);right:0;z-index:60;min-width:215px;padding:6px;background:#1a2029;border:1px solid #42516a;border-radius:9px;box-shadow:0 12px 30px #0008}.document-file-options button,.document-file-options label{display:block;box-sizing:border-box;width:100%;text-align:left;font:12px Inter,sans-serif;padding:12px;border:0;background:transparent;border-radius:6px;color:#e4ebf6;margin:0;cursor:pointer}.document-file-options button:hover,.document-file-options label:hover{background:#2d3a4e}.document-file-options input{position:absolute;width:1px;height:1px;opacity:0}.document-file-options label:focus-within{outline:2px solid #b6d0f7}.topbar{z-index:40}.top-actions{flex-wrap:wrap}
 @media screen and (max-width:850px){.top-actions>.document-undo{flex:none}.top-actions>.document-file-menu{flex:none}.document-file-options{right:auto;left:0}}
 @media print{.document-file-menu,.document-undo{display:none!important}}
+
+/* v3.4.2: keep RP next to the document on desktop and laptop screens. */
+@media screen and (min-width:851px){
+ .preview-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+ .preview-column{position:sticky;top:116px}
+ .document-stage{height:calc(100dvh - 176px);min-height:360px;max-height:1200px}
+ .rp-sidebar{max-height:calc(100dvh - 132px);overflow:auto;scroll-margin-top:116px}
+}
+@media screen and (min-width:851px) and (max-width:1300px){
+ .app-shell{display:grid;grid-template-columns:180px minmax(0,1fr)}
+ .content-grid{grid-template-columns:340px minmax(0,1fr);padding:16px;gap:16px}
+ .preview-layout{grid-template-columns:minmax(0,1fr) 250px;gap:14px}
+ .panel-card{padding:16px}
+}
+@media screen and (min-width:1301px) and (max-width:1499px){
+ .content-grid{grid-template-columns:360px minmax(0,1fr);padding:20px;gap:18px}
+ .preview-layout{grid-template-columns:minmax(0,1fr) 270px;gap:16px}
+}
+@media screen and (min-width:1500px) and (max-width:1799px){
+ .content-grid{grid-template-columns:380px minmax(0,1fr)}
+ .preview-layout{grid-template-columns:minmax(0,1fr) 290px;gap:16px}
+}
+@media screen and (min-width:851px) and (max-width:1100px){
+ .content-grid{grid-template-columns:minmax(0,1fr)}
+ .preview-column{position:static}
+ .control-column .panel-card{max-width:none}
+}
